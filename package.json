@@ -1,0 +1,23 @@
+{
+  "name": "myemployee-tracker",
+  "version": "1.0.0",
+  "description": "an command line employee tracker",
+  "main": "employeeDB.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ligaya96/MyEmployee-Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mysql": "^2.16.0"
+  },
+  "bugs": {
+    "url": "https://github.com/ligaya96/MyEmployee-Tracker/issues"
+  },
+  "homepage": "https://github.com/ligaya96/MyEmployee-Tracker#readme"
+}
