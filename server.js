@@ -15,8 +15,9 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     createRoster();
-  });
-  // creating Roster
+});
+
+// creating Roster
 function createRoster(){
     inquirer.prompt([{
         type: "list",

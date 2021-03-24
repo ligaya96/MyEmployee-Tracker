@@ -12,6 +12,6 @@ Ligaya Herndon
 ligaya96@gmail.com
 # Screen shot
 
-#Walkthough
+# Walkthough
 
 
