@@ -14,7 +14,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "console.table": "^0.10.0",
+    "inquirer": "^7.0.3"
   },
   "bugs": {
     "url": "https://github.com/ligaya96/MyEmployee-Tracker/issues"
