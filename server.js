@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table');
+// const consoleTable = require('console.table');
 
 // mysql connections
 const connection = mysql.createConnection({
@@ -40,11 +40,10 @@ function createRoster(){
             case "Add Employee":
                 addEmployee();
               break;
-
+              
               case "Add Role":
                  addRole(); 
              break;
-             
              case "Add Department":
                 addDepartment();
                break;
