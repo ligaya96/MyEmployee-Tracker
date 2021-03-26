@@ -38,28 +38,34 @@ function createRoster(){
     .then((answers) =>{
         switch(answers.choice){
             case "Add Employee":
-                return addEmployee();
-            
+             addEmployee();
+              break;
             case "Add Role":
-                return addRole(); 
-
+             addRole(); 
+             break;
              case "Add Department":
-               return addDepartment();
+               addDepartment();
+               break;
             
              case "View all employees":
-                return viewEmployees();   
+               viewEmployees();   
+               break;
                 
              case "View employees by Roles":
-                return viewRoles(); 
+                viewRoles(); 
+                break;
                 
              case "View employees by Department":
-                return viewDepartments();  
+               viewDepartments(); 
+               break; 
         
              case "Update Employee":
-                return updateEmployee();   
+              updateEmployee();   
+              break;
 
-            case "QUIT":
-              return quit();    
+             case "QUIT":
+              quit();
+              break;    
           
         }
     })
@@ -81,7 +87,7 @@ function getManagerInfo(){
 const EmployeeRole= [];
 
 function getRoles(){
-    connection.query = ("SELECT * FROM role", (err,res)=>{
+    connection.query = ("SELECT * FROM roles", (err,res)=>{
         if (err) throw (err);
         for (i=0;i<res.length;i++){
             EmployeeRole.push(res[i].title);
@@ -91,7 +97,7 @@ function getRoles(){
 };
 // view Employees
 function viewEmployees(){
-    connection.query = ("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS manager FROM employee INNER JOIN role ON role.id = employee.role_id INNER JOIN department ON department.id = role.department_id LEFT JOIN employee e ON employee.manager_id = e.id;",
+    connection.query = ("SELECT employee.first_name, employee.last_name, roles.title, roles.salary, department.name, CONCAT(e.first_name, ' ', e.last_name) AS manager FROM employee INNER JOIN roles ON roles.id = employee.role_id INNER JOIN department ON department.id = roles.department_id LEFT JOIN employee e ON employee.manager_id = e.id;",
     (err,res)=>{
         if (err) throw err;
         console.table(res);
@@ -100,7 +106,7 @@ function viewEmployees(){
 };
 // View of the Roles
 function viewRoles(){
-    connection.query("SELECT employee.first_name, employee.last_name, role.title AS title FROM employee JOIN role ON employee.role_id = role.id;",
+    connection.query("SELECT employee.first_name, employee.last_name, roles.title AS title FROM employee JOIN roles ON employee.role_id = roles.id;",
     (err,res)=>{
         if (err) throw err;
         console.table(res);
@@ -109,7 +115,7 @@ function viewRoles(){
 };
 // view of the Dept
 function viewDepartments(){
-    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
+    connection.query("SELECT employee.first_name, employee.last_name, department.name AS department FROM employee JOIN roles ON employee.role_id = roles.id JOIN department ON roles.department_id = department.id ORDER BY employee.id;",
     (err,res)=>{
         if (err) throw err;
         console.table(res);
@@ -134,7 +140,7 @@ function addDepartment(){
 };
 //Adding roles
 function addRole(){
-    connection.query("SELECT role.title AS title, role.salary AS salary FROM role, role.department_id AS department_id", (err,res)=>{
+    connection.query("SELECT roles.title AS title, roles.salary AS salary FROM roles, roles.department_id AS department_id", (err,res)=>{
         inquirer.prompt([{
             name: "title",
             type: 'input',
@@ -160,7 +166,7 @@ function addRole(){
           ]
          },
         ]).then((res)=>{
-            connection.query("INSERT INTO role SET ?", {
+            connection.query("INSERT INTO roles SET ?", {
                 title: res.title,
                 salary: res.salary,
                 department_id :res.department_id,
