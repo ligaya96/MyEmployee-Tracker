@@ -30,25 +30,27 @@ function createRoster(){
             "View all employees",
             "View employees by Roles",
             "View employees by Department",
-            "Update Employee",
+            "Update Employee Roles",
             "Quit"
         ]
 
     }])
-    .then((answers) =>{
-        switch(answers.choice){
+    .then((answer) =>{
+        switch(answer.choice){
             case "Add Employee":
-             addEmployee();
+                addEmployee();
               break;
-            case "Add Role":
-             addRole(); 
+
+              case "Add Role":
+                 addRole(); 
              break;
+             
              case "Add Department":
-               addDepartment();
+                addDepartment();
                break;
             
              case "View all employees":
-               viewEmployees();   
+                viewEmployees();   
                break;
                 
              case "View employees by Roles":
@@ -56,11 +58,11 @@ function createRoster(){
                 break;
                 
              case "View employees by Department":
-               viewDepartments(); 
+                viewDepartments(); 
                break; 
         
-             case "Update Employee":
-              updateEmployee();   
+             case "Update Employee Roles":
+               updateEmployeeRole();   
               break;
 
              case "QUIT":
@@ -71,21 +73,19 @@ function createRoster(){
     })
 };
 // Query for Manager
-const managerQ = [];
-
-function getManagerInfo(){
+const managerInfo = [];
+function getManager(){
     connection.query = ("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", (err,res)=>{
         if (err) throw (err);
         for (i=0;i<res.length;i++){
-            managerQ.push(res[i].first_name);
+            managerInfo.push(res[i].first_name);
         }
     })
-    return managerQ;
+    return managerInfo;
 };
 
 // Query for the roles
 const EmployeeRole= [];
-
 function getRoles(){
     connection.query = ("SELECT * FROM roles", (err,res)=>{
         if (err) throw (err);
@@ -140,7 +140,7 @@ function addDepartment(){
 };
 //Adding roles
 function addRole(){
-    connection.query("SELECT roles.title AS title, roles.salary AS salary FROM roles, roles.department_id AS department_id", (err,res)=>{
+    connection.query("SELECT roles.title AS title, roles.salary AS salary FROM roles", (err,res)=>{
         inquirer.prompt([{
             name: "title",
             type: 'input',
@@ -151,25 +151,10 @@ function addRole(){
             type: 'input',
             message: "salary?"
          },
-        {
-          type: "list",
-          name: "department_id",
-          message: "Which department?",
-          choices: [
-              "Janitor",
-              "Manager",
-              "Supervisor",
-              "Trainer",
-              "IT",
-              "Sales Associate",
-              "Volunteer"
-          ]
-         },
         ]).then((res)=>{
             connection.query("INSERT INTO roles SET ?", {
                 title: res.title,
                 salary: res.salary,
-                department_id :res.department_id,
             }, (err)=>{
                 if (err) throw err;
                 console.table(res);
@@ -188,10 +173,10 @@ function addEmployee(){
         choices: getRoles()
     },
     {
-        name: 'choice',
-        type: 'list',
+        name: "choice",
+        type: 'rawlist',
         message: 'What is the Managers name?',
-        choices: getManagerInfo()
+        choices: getManager()
     },
     {
        name: "firstName",
@@ -203,34 +188,34 @@ function addEmployee(){
        type: "input",
        message: "Last name?"
     }])
-    .then((answers) => {
-        const managerId = getManagerInfo().indexOf(answers.choice) + 1;
-        const roleId = getRoles().indexOf(answers.role) + 1
+    .then((answer) => {
+        const managerId = getManager().indexOf(answer.choice) + 1;
+        const roleId = getRoles().indexOf(answer.role) + 1
         connection.query('INSERT INTO employee SET ?', {
-            first_name: answers.firstName,
-            last_name: answers.lastName,
             role_id: roleId,
-            manager_id: managerId
+            manager_id: managerId,
+            first_name: answer.firstName,
+            last_name: answer.lastName,
         }, (error) => {
             if (error) throw error;
-            console.table(answers);
+            console.table(answer);
             createRoster();
         });
     });
 };
 
 //updating Employee
-function updateEmployee(){
-    connection.query("SELECT * FROM EMPLOYEE", (err,res)=>{
+function updateEmployeeRole(){
+    connection.query("SELECT roles.title FROM employee JOIN roles ON employee.role_id = roles.id;", (err,res)=>{
         if (err) throw err;
         inquirer.prompt([{
-            name: 'role',
+            name: 'roles',
             type: 'rawlist',
             message: "Employee's title?",
-            choices: newRole()
+            choices: getRoles()
         }])
         .then((answer)=>{
-            const roleId = newRole().indexOf(answer.role) + 1;
+            const roleId = getRoles().indexOf(answer.roles) + 1;
             connection.query("UPDATE employee SET WHERE ?", {
                 role_id: roleId
             }, (err)=>{

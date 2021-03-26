@@ -27,3 +27,7 @@ SELECT * FROM department;
 SELECT * FROM roles;
 SELECT * FROM employee;
 
+SELECT name, title, salary
+FROM roles
+INNER JOIN department ON roles.department_id = department.id;
+
